@@ -1,2 +1,3 @@
 *.git
 geth*/
+.DS_STORE/
