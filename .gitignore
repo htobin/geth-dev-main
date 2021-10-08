@@ -3,3 +3,4 @@ geth*/
 .DS_Store/
 __pychache__/
 *.yaml
+*.pyc
