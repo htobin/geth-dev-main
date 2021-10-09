@@ -1,2 +1,2 @@
-./cleandocker.sh
-./cleanfiles.sh
+./cleanup/cleandocker.sh
+./cleanup/cleanfiles.sh
