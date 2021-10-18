@@ -5,3 +5,4 @@ __pychache__/
 *.yaml
 *.pyc
 genesis.json
+.vscode/
