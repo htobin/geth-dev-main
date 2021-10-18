@@ -1,6 +1,7 @@
 import argparse
 import json
 from web3 import Web3
+import sys
 
 def arguments():
     parser = argparse.ArgumentParser(description='create docker compose file, directories for nodes, and Dockerfiles for nodes')
@@ -50,7 +51,7 @@ def connection_check(nodes):
 
 def create_accounts(nodes):
     for name in nodes.keys():
-        nodes[name].personal.newAccount("pass")
+        nodes[name].geth.personal.newAccount("pass")
 
 def account_check(nodes):
     for name in nodes.keys():
@@ -60,7 +61,7 @@ def account_check(nodes):
 def start_mining(nodes):
     for name in nodes.keys():
         print(f"{name}: starting to mine")
-        nodes[name].miner.start(1)
+        nodes[name].geth.miner.start(2)
         if(nodes[name].eth.mining):
             print(f"{name} is mining")
         else:
@@ -77,6 +78,7 @@ def stop_mining(nodes):
 
 
 if __name__ == "__main__":
+    print(sys.prefix)
     args = arguments()
     nodes = connect_to_nodes(args)
     connection_check(nodes)

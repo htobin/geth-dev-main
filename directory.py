@@ -40,7 +40,7 @@ node_lines = [
     "\n",
     "EXPOSE $discoverPort",
     "\n\n",
-    "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --datadir . --port $discoverPort --syncmode full --allow-insecure-unlock --http --http.addr 0.0.0.0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
+    "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --datadir . --port $discoverPort --syncmode full --allow-insecure-unlock --http --http.addr 0.0.0.0  --http.api \"eth,geth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
 ]
 
 bootnode_lines=[

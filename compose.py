@@ -1,3 +1,5 @@
+#install docker compose v2: https://docs.docker.com/compose/cli-command/
+#install pymal via pip
 import argparse
 import ipaddress
 
