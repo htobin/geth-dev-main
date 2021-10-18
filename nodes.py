@@ -78,7 +78,6 @@ def stop_mining(nodes):
 
 
 if __name__ == "__main__":
-    print(sys.prefix)
     args = arguments()
     nodes = connect_to_nodes(args)
     connection_check(nodes)
