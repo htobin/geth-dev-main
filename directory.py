@@ -43,7 +43,7 @@ node_lines = [
     "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --datadir . --port $discoverPort --syncmode full --allow-insecure-unlock --http --http.addr 0.0.0.0  --http.api \"eth,geth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
 ]
 
-bootnode_lines=[
+bootnode_lines = [
     "FROM ubuntu:latest",
     "\n\n",
     "RUN apt-get update \\",
