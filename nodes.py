@@ -76,6 +76,32 @@ def stop_mining(nodes):
     else:
         print(f"{name} is not mining")
 
+def unlock_accounts(nodes):
+    for name in nodes.keys():
+        self= nodes[name]
+        account_to_unlock = self.geth.personal.list_accounts()[0]
+        status = self.geth.personal.unlock_account(account_to_unlock, "pass")
+        if status:
+            print(f"{name} is unlocked")
+        else:
+            print(f"{name} is not unlocked")
+
+def list_balance(nodes):
+    for name in nodes.keys():
+        self= nodes[name]
+        account = self.geth.personal.list_accounts()[0]
+        status = self.eth.get_balance(account)
+        if status:
+            print(f"{name} has {status}")
+        else:
+            print(f"could not get balance of {name}")
+
+def still_mining(nodes):
+    for name in nodes.keys():
+        if(nodes[name].eth.mining):
+            print(f"{name} is still mining")
+        else:
+            print(f"{name} is not mining")
 
 if __name__ == "__main__":
     args = arguments()
@@ -87,7 +113,11 @@ if __name__ == "__main__":
     if args.function =="start_mine":
         start_mining(nodes)
     if args.function =="stop_mine":
-        start_mining(nodes)
+        stop_mining(nodes)
+    if args.function =="unlock":
+        unlock_accounts(nodes)
+    if args.function =="mine_check":
+        still_mining(nodes)
 
     
 
