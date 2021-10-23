@@ -4,6 +4,5 @@
     "bootnode_port":"30301",
     "ip_range": "172.16.0.0/24",
     "node_count": "2",
-    "chain_id": "666666",
-    "loaded_accounts": ["one"]
+    "chain_id": "666666"
 }

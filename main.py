@@ -3,6 +3,7 @@ import pyaml
 import subprocess
 import compose
 import directory
+import keystore
 
 #main loop
 if __name__ == "__main__":
@@ -17,7 +18,7 @@ if __name__ == "__main__":
         exit()
     
     #grab all variables
-    key_file = config_data["key"]
+    bnode_keyfile = config_data["key"]
     chain = config_data["chain_id"]
     bnodeIP = config_data["bootnode_ip"]
     bnodePort = config_data["bootnode_port"]
@@ -26,9 +27,9 @@ if __name__ == "__main__":
 
     #open bootkey file 
     try:
-        f = open(key_file, "r")
+        f = open(bnode_keyfile, "r")
     except OSError:
-        print(f"could not open {key_file} file")
+        print(f"could not open {bnode_keyfile} file")
         exit()
 
     #key was read in correctly
@@ -39,26 +40,32 @@ if __name__ == "__main__":
     enodekey = enodekey.decode("utf-8")
     enodekey = enodekey.rstrip('\n')
 
+    # create all accounts
+    keyfiles = keystore.main()
+    #need to create accounts from keys, save
     #create the genesis file
     directory.create_genesis_file(chain)
     
     #start the compose file
     initial = {
-            "version": "\"3\"",
-            'services': {}
-        }
+                "version": "\"3\"",
+                'services': {}
+              }
+
     #create the bootnode data
     bnode_data = compose.create_bootnode_data(hexkey,enodekey,bnodeIP,bnodePort)
     #create the bootnode portion of the compose file
     bnode = compose.create_bootnode(bnode_data)
-    directory.create_node_directory(bnode)
+    directory.create_node_directory(bnode,None)
     initial["services"][bnode["hostname"]] = bnode
 
     #do it for other nodes
     nodes = compose.create_nodes_wrapper(networkRange, node_count, bnode_data,chain)
+    i = 0
     for name in nodes.keys():
         initial["services"][name] = nodes[name]
-        directory.create_node_directory(nodes[name])
+        directory.create_node_directory(nodes[name],keyfiles[i])
+        i+=1
     initial["networks"] = compose.create_network(networkRange)
     initial["volumes"] = compose.create_volumes(node_count)
     
@@ -66,6 +73,7 @@ if __name__ == "__main__":
     text.encode("UTF-8")
     with open('docker-compose.yaml','w',encoding="utf-8") as file:
         file.write(text)
+
     
      
     

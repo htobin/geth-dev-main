@@ -1,47 +1,7 @@
 import os
 import subprocess
 import json
-node_lines = [
-    "FROM ubuntu:latest",
-    "\n\n",
-    "RUN apt-get update \\",
-    "\n",
-    "\t&& apt-get install -y wget software-properties-common \\",
-    "\n",
-    "\t&& rm -rf /var/lib/apt/lists/*",
-    "\n\n",
-    "WORKDIR \"/root\"",
-    "\n\n",
-    "RUN add-apt-repository -y ppa:ethereum/ethereum",
-    "\n\n",
-    "ARG binary",
-    "\n",
-    "RUN apt-get update \\",
-    "\n",
-    "\t&& apt-get install -y ethereum",
-    "\n\n",
-    "COPY genesis.json ./genesis.json",
-    "\n\n",
-    "RUN geth init genesis.json",
-    "\n\n",
-    "ENV bootnodeId=\"\"",
-    "\n",
-    "ENV bootnodeIp=\"\"",
-    "\n",
-    "ENV rpcPort=\"\"",
-    "\n",
-    "ENV discoverPort=\"\"",
-    "\n",
-    "ENV bootnodePort=\"\"",
-    "\n",
-    "ENV networkId=\"\"",
-    "\n\n",
-    "EXPOSE $rpcPort",
-    "\n",
-    "EXPOSE $discoverPort",
-    "\n\n",
-    "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --datadir . --port $discoverPort --syncmode full --allow-insecure-unlock --http --http.addr 0.0.0.0  --http.api \"eth,geth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
-]
+
 
 bootnode_lines = [
     "FROM ubuntu:latest",
@@ -72,10 +32,62 @@ bootnode_lines = [
 ]
 
 
-
+def create_node_lines(node_keyfile):
+    keyfile_copy = "COPY ./keystore/" + node_keyfile + " ./" + node_keyfile
+    keyfile_import = "RUN geth account import --password password.txt " + node_keyfile
+    key_file_print = "CMD cat "+ node_keyfile
+    node_lines = [
+        "FROM ubuntu:latest",
+        "\n\n",
+        "RUN apt-get update \\",
+        "\n",
+        "\t&& apt-get install -y wget software-properties-common \\",
+        "\n",
+        "\t&& rm -rf /var/lib/apt/lists/*",
+        "\n\n",
+        "WORKDIR \"/root\"",
+        "\n\n",
+        "RUN add-apt-repository -y ppa:ethereum/ethereum",
+        "\n\n",
+        "ARG binary",
+        "\n",
+        "RUN apt-get update \\",
+        "\n",
+        "\t&& apt-get install -y ethereum",
+        "\n\n",
+        "COPY password.txt ./password.txt",
+        "\n\n",
+        keyfile_copy,
+        "\n\n",
+        keyfile_import,
+        "\n\n",
+        "COPY genesis.json ./genesis.json",
+        "\n\n",
+        "RUN geth init genesis.json",
+        "\n\n",
+        "ENV bootnodeId=\"\"",
+        "\n",
+        "ENV bootnodeIp=\"\"",
+        "\n",
+        "ENV rpcPort=\"\"",
+        "\n",
+        "ENV discoverPort=\"\"",
+        "\n",
+        "ENV bootnodePort=\"\"",
+        "\n",
+        "ENV networkId=\"\"",
+        "\n\n",
+        "EXPOSE $rpcPort",
+        "\n",
+        "EXPOSE $discoverPort",
+        "\n\n",
+        "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --datadir . --port $discoverPort --syncmode full --allow-insecure-unlock --http --http.addr 0.0.0.0  --http.api \"eth,geth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
+    ]
+    return node_lines
+    
 
 #create directories:
-def create_node_directory(node_obj):
+def create_node_directory(node_obj,keyfile):
     #create the directory
     dir_name = node_obj["hostname"]
     dockerfile_string = "./"+dir_name +"/Dockerfile"
@@ -85,6 +97,7 @@ def create_node_directory(node_obj):
         for line in bootnode_lines:
             f.write(line)  
     else:
+        node_lines = create_node_lines(keyfile)
         for line in node_lines:
             f.write(line)
 
