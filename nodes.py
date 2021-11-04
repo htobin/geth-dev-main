@@ -118,6 +118,8 @@ if __name__ == "__main__":
         unlock_accounts(nodes)
     if args.function =="mine_check":
         still_mining(nodes)
+    if args.function =="balance":
+        list_balance(nodes)
 
     
 

@@ -1,8 +1,9 @@
 import subprocess
+import json
 #create geth accounts
 def local_account_setup(node_count):
     i = 0
-    while i < node_count:
+    while i < int(node_count):
         p = subprocess.Popen(['geth','account', 'new','--datadir','./tmp_data', '--password','./password.txt','--keystore','./keystore'])
         subprocess.Popen.wait(p)
         i+=1
@@ -10,21 +11,26 @@ def local_account_setup(node_count):
     return key_list.decode('UTF-8')
 
 def import_keyfiles(key_list):
-    key_files = str(key_list).splitlines()
-    files_obj= []
-    new_files_obj = []
-    for line in key_files:
-        files_obj.append(line)
+    keyfiles = str(key_list).splitlines()
+    files_obj= {}
     i = 0
-    for file in files_obj:
-        new_file_string = str(8545+i)+".key"
-        p = subprocess.Popen(['cp', "./keystore/"+file, "./keystore/"+new_file_string])
-        subprocess.Popen.wait(p)
+    for file in keyfiles:
+        path = "./keystore/"+ file
+        d_key = "geth-dev-node_" + str(i)
+        try:
+            with open(path) as f:
+                config_data = json.load(f)
+        except OSError:
+            print(f"could not open {file} file")
+            exit()
+        files_obj[d_key] = {
+                            "address": str(config_data["address"]),
+                            "file": str(file)
+                           }
         i+=1
-        new_files_obj.append(new_file_string)
-    return new_files_obj
+    return files_obj
 
 #accounts are created
-def main():
-    key_list = local_account_setup(2)
+def create_keyfile_obj(node_count):
+    key_list = local_account_setup(node_count)
     return import_keyfiles(key_list)

@@ -41,10 +41,10 @@ if __name__ == "__main__":
     enodekey = enodekey.rstrip('\n')
 
     # create all accounts
-    keyfiles = keystore.main()
+    keyfile_objs = keystore.create_keyfile_obj(node_count)
     #need to create accounts from keys, save
     #create the genesis file
-    directory.create_genesis_file(chain)
+    directory.create_genesis_file(chain,keyfile_objs)
     
     #start the compose file
     initial = {
@@ -61,11 +61,9 @@ if __name__ == "__main__":
 
     #do it for other nodes
     nodes = compose.create_nodes_wrapper(networkRange, node_count, bnode_data,chain)
-    i = 0
     for name in nodes.keys():
         initial["services"][name] = nodes[name]
-        directory.create_node_directory(nodes[name],keyfiles[i])
-        i+=1
+        directory.create_node_directory(nodes[name],keyfile_objs[name])
     initial["networks"] = compose.create_network(networkRange)
     initial["volumes"] = compose.create_volumes(node_count)
     
