@@ -59,13 +59,24 @@ def account_check(nodes):
         print(f"{name}: coinbase: {nodes[name].eth.coinbase}")
 
 def start_mining(nodes):
-    for name in nodes.keys():
+    i = 1
+    while i < len(nodes):
+        name = str(8545+i)
         print(f"{name}: starting to mine")
         nodes[name].geth.miner.start(2)
         if(nodes[name].eth.mining):
             print(f"{name} is mining")
         else:
             print(f"{name} is not mining")
+        i+=1
+
+    # for name in nodes.keys():
+    #     print(f"{name}: starting to mine")
+    #     nodes[name].geth.miner.start(2)
+    #     if(nodes[name].eth.mining):
+    #         print(f"{name} is mining")
+    #     else:
+    #         print(f"{name} is not mining")
 
 def stop_mining(nodes):
     for name in nodes.keys():

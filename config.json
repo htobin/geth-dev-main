@@ -3,6 +3,6 @@
     "bootnode_ip": "172.16.0.101",
     "bootnode_port":"30301",
     "ip_range": "172.16.0.0/24",
-    "node_count": "2",
+    "node_count": "4",
     "chain_id": "666666"
 }

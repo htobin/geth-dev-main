@@ -6,3 +6,4 @@ __pychache__/
 *.pyc
 genesis.json
 .vscode/
+keystore/
