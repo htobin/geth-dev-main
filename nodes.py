@@ -70,22 +70,28 @@ def start_mining(nodes):
             print(f"{name} is not mining")
         i+=1
 
-    # for name in nodes.keys():
-    #     print(f"{name}: starting to mine")
-    #     nodes[name].geth.miner.start(2)
-    #     if(nodes[name].eth.mining):
-    #         print(f"{name} is mining")
-    #     else:
-    #         print(f"{name} is not mining")
+def check_transactions(nodes):
+    node = input("Please enter node port number: ")
+    transaction = input("Please enter transaction number: ")
+    print(f"connecting to port: {node}, looking for {transaction}")
+    receipt =nodes[str(node)].eth.get_transaction_receipt(str(transaction)) 
+    if receipt ==  False:
+        print("could not find transaction")
+    else: 
+         raw = Web3.toJSON(receipt)
+         parsed = json.loads(raw)
+         print(json.dumps(parsed, indent=2))
+
+
 
 def stop_mining(nodes):
     for name in nodes.keys():
         print(f"{name}: mining will stop")
-    nodes[name].geth.miner.stop()
-    if(nodes[name].eth.mining):
-        print(f"{name} is still mining")
-    else:
-        print(f"{name} is not mining")
+        nodes[name].geth.miner.stop()
+        if(nodes[name].eth.mining):
+            print(f"{name} is still mining")
+        else:
+            print(f"{name} is not mining")
 
 def unlock_accounts(nodes):
     for name in nodes.keys():
@@ -117,7 +123,7 @@ def still_mining(nodes):
 if __name__ == "__main__":
     args = arguments()
     nodes = connect_to_nodes(args)
-    connection_check(nodes)
+    #connection_check(nodes)
     if args.function =="create_accounts":
         create_accounts(nodes)
         account_check(nodes)
@@ -131,6 +137,8 @@ if __name__ == "__main__":
         still_mining(nodes)
     if args.function =="balance":
         list_balance(nodes)
+    if args.function =="transaction":
+        check_transactions(nodes)
 
     
 

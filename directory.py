@@ -77,7 +77,7 @@ def create_node_lines(keyfile):
         "\n",
         "EXPOSE $discoverPort",
         "\n\n",
-        "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --port $discoverPort --syncmode full --allow-insecure-unlock --unlock 0 --password ./password.txt --http --http.addr 0.0.0.0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
+        "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --port $discoverPort --syncmode full --allow-insecure-unlock --unlock 0 --password ./password.txt --http --http.addr 0.0.0.0 --dev.period 0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
     ]
     return node_lines
     
