@@ -1,4 +1,6 @@
 #https://docs.docker.com/engine/install/linux-postinstall/
+#docker run -it --entrypoint=/bin/bash geth-cmd-node
+
 
 import json
 import pyaml
@@ -56,19 +58,28 @@ if __name__ == "__main__":
 
     #create the bootnode data
     bnode_data = compose.create_bootnode_data(hexkey,enodekey,bnodeIP,bnodePort)
-    #create the bootnode portion of the compose file
+    #create the bootnode directory and docker compose file information
     bnode = compose.create_bootnode(bnode_data)
     directory.create_node_directory(bnode,None)
     initial["services"][bnode["hostname"]] = bnode
 
-    #do it for other nodes
+    #create the cmd node directory and docker compose file information
+    cmd_node = compose.create_cmd_node()
+    directory.create_node_directory(cmd_node,None)
+    initial["services"]["geth-cmd-node"] = cmd_node
+
+
+    #create the wallet node directories and docker compose file information
     nodes = compose.create_nodes_wrapper(networkRange, node_count, bnode_data,chain)
     for name in nodes.keys():
         initial["services"][name] = nodes[name]
         directory.create_node_directory(nodes[name],keyfile_objs[name])
+
+    #networks and volume information for docker compose file
     initial["networks"] = compose.create_network(networkRange)
     initial["volumes"] = compose.create_volumes(node_count)
     
+    #docker compose initialization and creation
     text = pyaml.dump(initial,sort_keys=False)
     text.encode("UTF-8")
     with open('docker-compose.yaml','w',encoding="utf-8") as file:

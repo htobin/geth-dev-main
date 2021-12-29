@@ -1,7 +1,7 @@
 import argparse
 import json
 from web3 import Web3
-import sys
+import ipaddress
 
 def arguments():
     parser = argparse.ArgumentParser(description='create docker compose file, directories for nodes, and Dockerfiles for nodes')
@@ -30,9 +30,14 @@ def create_node_names(config_node_count):
 
 def create_node_obj(node_names):
     node_objs ={}
+    starting_ip = '172.16.0.2'
+    i = 0
     for name in node_names:
-        current_string = "http://localhost:" + name
+        current_ip  = ipaddress.ip_address(starting_ip) + i
+        print(current_ip)
+        current_string = "http://"+ str(current_ip) + ":" + name
         node_objs[name] =  Web3(Web3.HTTPProvider(current_string))
+        i = i + 1
     return node_objs
 
 
@@ -48,10 +53,6 @@ def connection_check(nodes):
             print(f"{name} is connected")
         else:
             print(f"{name} is not connected")
-
-def create_accounts(nodes):
-    for name in nodes.keys():
-        nodes[name].geth.personal.newAccount("pass")
 
 def account_check(nodes):
     for name in nodes.keys():
@@ -81,7 +82,6 @@ def check_transactions(nodes):
          raw = Web3.toJSON(receipt)
          parsed = json.loads(raw)
          print(json.dumps(parsed, indent=2))
-
 
 
 def stop_mining(nodes):
@@ -124,9 +124,6 @@ if __name__ == "__main__":
     args = arguments()
     nodes = connect_to_nodes(args)
     #connection_check(nodes)
-    if args.function =="create_accounts":
-        create_accounts(nodes)
-        account_check(nodes)
     if args.function =="start_mine":
         start_mining(nodes)
     if args.function =="stop_mine":

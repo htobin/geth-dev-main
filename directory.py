@@ -2,11 +2,44 @@ import os
 import subprocess
 import json
 
+cmd_node_lines = [
+    "FROM ubuntu:latest",
+    "\n\n",
+    "RUN apt-get update \\",
+    "\n",
+    "\t&& apt-get install -y wget software-properties-common \\",
+    "\n",
+    "\t&& apt-get -y install net-tools \\",
+    "\n",
+    "\t&& apt-get -y install telnet \\",
+    "\n",
+    "\t&& apt-get -y install python3-pip \\",
+    "\n",
+    "\t&& rm -rf /var/lib/apt/lists/*",
+    "\n\n",
+    "WORKDIR \"/root\"",
+    "\n\n",
+    "RUN add-apt-repository -y ppa:ethereum/ethereum",
+    "\n\n",
+    "ARG binary",
+    "\n",
+    "RUN apt-get update \\",
+    "\n",
+    "\t&& apt-get install -y ethereum",
+    "\n\n",
+    "EXPOSE 8080",
+    "\n",
+    "EXPOSE 80",
+    "\n\n",
+]
+
 
 bootnode_lines = [
     "FROM ubuntu:latest",
     "\n\n",
     "RUN apt-get update \\",
+    "\n",
+    "\t&& apt-get install -y iputils-ping \\",
     "\n",
     "\t&& apt-get install -y wget software-properties-common \\",
     "\n",
@@ -31,13 +64,14 @@ bootnode_lines = [
     "CMD exec bootnode -nodekeyhex $nodekeyhex",
 ]
 
-
 def create_node_lines(keyfile):
     keyfile_copy = "COPY ./keystore/" + keyfile + " ./.ethereum/keystore/" + keyfile
     node_lines = [
         "FROM ubuntu:latest",
         "\n\n",
         "RUN apt-get update \\",
+        "\n",
+        "\t&& apt-get install -y iputils-ping \\",
         "\n",
         "\t&& apt-get install -y wget software-properties-common \\",
         "\n",
@@ -91,7 +125,10 @@ def create_node_directory(node_obj,keyfile_obj):
     f  = open(dockerfile_string, "w+")
     if dir_name == "geth-bootnode":
         for line in bootnode_lines:
-            f.write(line)  
+            f.write(line)
+    elif dir_name == "geth-cmd-node":
+        for line in cmd_node_lines:
+            f.write(line)
     else:
         node_lines = create_node_lines(keyfile_obj["file"])
         for line in node_lines:

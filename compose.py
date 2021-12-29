@@ -2,8 +2,9 @@
 #install pymal via pip
 import argparse
 import ipaddress
+from typing import Container
+import os
 
-from yaml import parse
 def ingest_config_file():
     parser = argparse.ArgumentParser(description='create docker compose file, directories for nodes, and Dockerfiles for nodes')
     parser.add_argument('config_file', help='keyfile that contains information about bootnode, amount of nodes, IP range for nodes, and the network ID')
@@ -19,6 +20,33 @@ def create_bootnode_data(key,enode,IP,port):
     }
     return data
 
+
+def create_cmd_node():
+    cwd = os.getcwd()
+    volume_string = "$PWD:/root"
+    cmd_node = {
+    'hostname': 'geth-cmd-node',
+    'container_name': 'geth-cmd-node',
+    'image': 'geth-cmd-node',
+        'build': {
+                'context' :'./geth-cmd-node'
+            },
+        'ports': [
+            '8080:8080/tcp',
+            '8080:8080/udp',
+            '80:80/tcp',
+            '80:80/udp'
+            
+        ],
+        'volumes':[volume_string],
+        'networks':{
+            'chainnet':{
+                'ipv4_address':'172.16.0.102'
+            }
+        }
+    }
+    return cmd_node
+
 def create_bootnode(bnode_data):
     #nodehexkey string creation
     nodekeyhex_string = "nodekeyhex=" + bnode_data["nodehexkey"]
@@ -26,6 +54,8 @@ def create_bootnode(bnode_data):
     bnode_port_environment = "port="+bnode_data["port"]
     bootnode = {
         'hostname': 'geth-bootnode',
+        'container_name': 'geth-bootnode',
+        'image': 'geth-bootnode',
         'environment': [
                 nodekeyhex_string,
                 bnode_port_environment
@@ -41,7 +71,9 @@ def create_bootnode(bnode_data):
                 'chainnet':{
                     'ipv4_address':bnode_data["ip"]
                 }
-            }   
+            },
+        'stdin_open': 'true',
+        'tty': 'true'
     }
 
     return bootnode
@@ -84,11 +116,13 @@ def create_node(num,node_ip, bnode_data, rpc, discover, net_id):
 
 
     dockerfile_string = "./"+ n_name +"/Dockerfile"
-    test_string = "wget http://localhost:" + rpc
+    test_string = "wget http://"+ node_ip +":" + rpc
     volume_string = "eth-data-"+num+":/root/.ethhash"
 
     node = {
         'hostname': n_name,
+        'container_name': n_name,
+        'image': n_name,
         'depends_on':['geth-bootnode'],
         'environment':[
             bnode_id_string,
@@ -138,9 +172,12 @@ def create_network(net_range):
 def create_volumes(num_nodes):
     volumes = {}
     volumes["bootnode"] = None
+    volumes["cmd-node"] = None
     i = 0
     while i < int(num_nodes):
         volume_string = "eth-data-" + str(i)
         volumes[volume_string] = None
         i+=1
     return volumes
+
+
