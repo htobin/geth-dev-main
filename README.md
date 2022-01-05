@@ -63,13 +63,15 @@ To create a simulated network of Ethereum nodes that can store Ether, mine Ether
     }
 
 # Genesis file structure: genesis.json
-This is the genesis file which is used by the boot node and gives all of the conditions that are given at the start of the network. For example it can indicate which block to start at along with 
+This is the genesis file which is used by the boot node and gives all of the conditions that are given at the start of the network. 
+The genesis file is generated when main.py is ran.
 
     "config": {
         "chainId": 666666,
             - the ID of the blockchain is used by other nodes to identify which blockchain they are using to perform work
 
-        *All fields below are used to indicate which block is the first block, the details of the different types of blocks are beyond the scope of this project*
+        *All fields below are used to indicate which block is the first block, the details of the different 
+        types of blocks are beyond the scope of this project*
 
         "homesteadBlock": 0,
         "eip150Block": 0,
@@ -84,7 +86,8 @@ This is the genesis file which is used by the boot node and gives all of the con
     },
     "nonce": "0x0",
     "timestamp": "0x61ca9f5b",
-        - generated in the directory.py code. This is the epoch in which block 0 is generated, block 0 isn't mined because there are no transactions. This is known as a the genesis block.
+        - generated in the directory.py code. This is the epoch in which block 0 is generated, 
+        block 0 isn't mined because there are no transactions. This is known as a the genesis block.
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": "0x47b760",
         - makes sure that accounts don't spend too much gas for a single transaction
