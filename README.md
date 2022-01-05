@@ -301,7 +301,7 @@ python3 main.py config.json
 Starts the program. Depending on how many nodes you have, the program will generate all of the appropriate Dockerfiles and account key files. It's recommended to have at least 2 nodes, with one being dedicated to deploying contracts. In it's current iteration, the "start_mining" function only has all nodes with a port number greater than 8485. This allows the node using port 8485 to deploy smart contracts and have the deployment be recorded into the blockchain.
 
 
-![3_nodes](../images/Network_overview_3_nodes.jpg)
+![3_nodes](https://github.com/htobin/geth-dev-main/blob/master/images/Network_overview_3_nodes.jpg)
 
 
 ## Mining
