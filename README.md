@@ -87,7 +87,7 @@ The genesis file is generated when main.py is ran.
     "nonce": "0x0",
     "timestamp": "0x61ca9f5b",
         - generated in the directory.py code. This is the epoch in which block 0 is generated, 
-        block 0 isn't mined because there are no transactions. This is known as a the genesis block.
+          block 0 isn't mined because there are no transactions. This is known as a the genesis block.
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": "0x47b760",
         - makes sure that accounts don't spend too much gas for a single transaction
@@ -138,7 +138,7 @@ These are segments within the Docker Compose file that are generated from the co
                 ipv4_address: 172.16.0.101
                     - IP address of the boot node
 
-## Wallet node structire in Compose file
+## Wallet node structure in Compose file
     geth-dev-node_0:
         hostname: geth-dev-node_0
         depends_on:
@@ -172,7 +172,8 @@ These are segments within the Docker Compose file that are generated from the co
             retries: 30
         volumes:
             - eth-data-0:/root/.ethhash
-            - [source voulme: destination voulme], can also be a local source such as directory if    looking for maximum sync potential 
+            - [source voulme: destination voulme], can also be a local source such as directory if
+              looking for maximum sync potential 
         ports:
             - 8545:8545
                 - formatted for [host port:container point], designates a host port that the contain will use
