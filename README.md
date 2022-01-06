@@ -5,10 +5,12 @@ To create a simulated network of Ethereum nodes that can store Ether, mine Ether
 
 # Dependencies on Linux
 - ### [Python](https://www.python.org/downloads/): version 3.8.10 or greater
-- ### [pip](https://pip.pypa.io/en/stable/cli/pip_download/): version 20.0.2 
+    - ### [pip](https://pip.pypa.io/en/stable/cli/pip_download/): version 20.0.2
+        - ### [pymal](https://pypi.org/project/PyYAML/) 
 - ### [Web3.py](https://web3py.readthedocs.io/en/stable/): version 5.24.0 or greater
 - ### [Docker](https://docs.docker.com/get-docker/): Docker version 20.10.7, build 20.10.7-0 ubuntu5~20.04.2
     - ### [Docker Compose v2](https://docs.docker.com/compose/cli-command/)
+    - ### [Post Install Instructions](https://docs.docker.com/engine/install/linux-postinstall/)
 - ### [Geth](https://geth.ethereum.org/docs/install-and-build/installing-geth): Version: 1.10.14-stable
 - ### [Brownie](https://eth-brownie.readthedocs.io/en/stable/): Brownie v1.17.0
 

@@ -1,6 +1,14 @@
+#File: keystore.py
+#Description: Contains functions and objects to create all accounts that will be used for the nodes
+
 import subprocess
 import json
-#create geth accounts
+
+#Function: local_account_setup
+#Description: Create individual account key files to be used on the blockchain
+#Parameters
+#          node_count: the amount of nodes that contain accounts
+# Return: a list of key files
 def local_account_setup(node_count):
     i = 0
     while i < int(node_count):
@@ -10,6 +18,11 @@ def local_account_setup(node_count):
     key_list = subprocess.check_output(['ls','./keystore'])
     return key_list.decode('UTF-8')
 
+#Wrapper to attribute each key file name to an address
+#Function: import_keyfiles
+#Parameters
+#          key_list: list of key files that are used to create accounts for each node
+#Return: the object containing a list of key files and information pertaining to each individual file
 def import_keyfiles(key_list):
     keyfiles = str(key_list).splitlines()
     files_obj= {}
@@ -30,7 +43,11 @@ def import_keyfiles(key_list):
         i+=1
     return files_obj
 
-#accounts are created
+#Creates the key file object to be used later when creating Dockerfiles and attributing each account to a node
+#Function: create_keyfile_obj
+#Parameters
+#          node_count: the amount of nodes that contain accounts
+#Return: the object containing all key files and the key file information
 def create_keyfile_obj(node_count):
     key_list = local_account_setup(node_count)
     return import_keyfiles(key_list)

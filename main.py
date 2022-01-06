@@ -11,6 +11,7 @@ import keystore
 if __name__ == "__main__":
     arguments = compose.ingest_config_file()
     config_file = arguments.config_file
+
     #open json file
     try:
         with open(config_file) as config_f:
@@ -69,6 +70,7 @@ if __name__ == "__main__":
     initial["networks"] = compose.create_network(networkRange)
     initial["volumes"] = compose.create_volumes(node_count)
     
+    #generate the Docker compose file
     text = pyaml.dump(initial,sort_keys=False)
     text.encode("UTF-8")
     with open('docker-compose.yaml','w',encoding="utf-8") as file:

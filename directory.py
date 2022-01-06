@@ -1,8 +1,10 @@
+#File: directory.py
+#Description: Contains functions and objects to create all Dockerfiles and their appropriate directories and the genesis file
 import os
 import subprocess
 import json
 
-
+#Boot node Dockerfile lines
 bootnode_lines = [
     "FROM ubuntu:latest",
     "\n\n",
@@ -31,6 +33,11 @@ bootnode_lines = [
     "CMD exec bootnode -nodekeyhex $nodekeyhex",
 ]
 
+#Funtion: create_node_lines
+#Description: Creates the Dockerfile lines for a node containing an account
+#Parameters
+#          keyfile: the account number in hexadecimal format, this account will be referenced in the genesis file
+#Return: lines for the individual node
 
 def create_node_lines(keyfile):
     keyfile_copy = "COPY ./keystore/" + keyfile + " ./.ethereum/keystore/" + keyfile
@@ -80,11 +87,15 @@ def create_node_lines(keyfile):
         "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --port $discoverPort --syncmode full --allow-insecure-unlock --unlock 0 --password ./password.txt --http --http.addr 0.0.0.0 --dev.period 0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
     ]
     return node_lines
-    
 
-#create directories:
+#Create directories for all nodes    
+#Function: create_node_directory
+#Parameters
+#          node_obj: the object containing information of the node to which the directory belongs to
+#          keyfile_obj: object containing information about the keyfile  
+
 def create_node_directory(node_obj,keyfile_obj):
-    #create the directory
+    #generate directory name then create the directory
     dir_name = node_obj["hostname"]
     dockerfile_string = "./"+dir_name +"/Dockerfile"
     os.mkdir(dir_name)
@@ -96,6 +107,12 @@ def create_node_directory(node_obj,keyfile_obj):
         node_lines = create_node_lines(keyfile_obj["file"])
         for line in node_lines:
             f.write(str(line))
+
+#Creates the genesis file
+#Function: create_node_directory
+#Parameters
+#          chain_id: ID of the blockchain where work will be commited
+#          keyfile_objs: contains all information of all key files
 
 def create_genesis_file(chain_id, keyfile_objs):
     #get the time as an epoch
@@ -131,7 +148,7 @@ def create_genesis_file(chain_id, keyfile_objs):
         "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "baseFeePerGas": null
     }
-    #get the address of the keyfiles
+    #get the address of the key files to make sure all accounts have ether to burn
     for file in keyfile_objs.keys():
         accounts_to_allocate = genesis["alloc"]
         accounts_to_allocate["0x"+str(keyfile_objs[file]["address"])] = {"balance": "0x200000000000000000000000000000000000000000000000000000000000000"}
