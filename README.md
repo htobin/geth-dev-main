@@ -162,7 +162,7 @@ These are segments within the Docker Compose file that are generated from the co
         build:
             context: . 
             - the working directory where any files used by the container can be found
-        dockerfile: ./geth-dev-node_0/Dockerfile
+            dockerfile: ./geth-dev-node_0/Dockerfile
             - location of the Dockerfile
         container_name: geth-dev-node_0
             - Name for the container
