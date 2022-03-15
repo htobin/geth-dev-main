@@ -21,7 +21,6 @@ if __name__ == "__main__":
         exit()
     
     #grab all variables
-    
     bnode_keyfile = config_data["key"]
     chain = config_data["chain_id"]
     bnodeIP = config_data["bootnode_ip"]
