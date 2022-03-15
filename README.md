@@ -47,23 +47,7 @@ To create a simulated network of Ethereum nodes that can store Ether, mine Ether
     - cleanfiles.sh Removes: node directories, genesis file, Docker Compose file, and node keyfiles
 - ## clean.sh
     - Cleans all Docker artifacts and additional directories.
-
-# Configuration file: config.json
-    {
-        "key":"./bootnode.key",
-            - location of the boot node key
-        "bootnode_ip": "172.16.0.101",
-            - the ip of the boot node
-        "bootnode_port":"30301",
-            - the discovery port on the boot node that is used to recieve messages from other nodes 
-        "ip_range": "172.16.0.0/24",
-            - IP range for all nodes
-        "node_count": "3",
-            - determines how many additional wallet nodes will be added
-        "chain_id": "666666"
-            - customizes the chain ID, in case developers want to make different chains with conditions
-    }
-
+    
 # Genesis file structure: genesis.json
 This is the genesis file which is used by the boot node and gives all of the conditions that are given at the start of the network. 
 The genesis file is generated when main.py is ran.
@@ -288,26 +272,35 @@ These are segments within the Docker Compose file that are generated from the co
     --http.port $rpcPort
         - RPC port that will be used to communicate with web3.py library
 
-# Contract deployment using Brownie framework: /token
-- ## /token/contracts
-    - Default solidity contracts
-- ## /token/scripts
-    - python script to deploy the contract
-- ## /token/tests
-    - test your contracts on your network.
+
+# Configuration file: config.json
+    {
+        "key":"./bootnode.key",
+            - location of the boot node key
+        "bootnode_ip": "172.16.0.101",
+            - the ip of the boot node
+        "bootnode_port":"30301",
+            - the discovery port on the boot node that is used to recieve messages from other nodes 
+        "ip_range": "172.16.0.0/24",
+            - IP range for all nodes
+        "node_count": "3",
+            - determines how many additional wallet nodes will be added
+        "chain_id": "666666"
+            - customizes the chain ID, in case developers want to make different chains with conditions
+    }
 
 # Running the program
-In it's current state the host machine has local ports that connect to each of the nodes. Meaning that nodes can be accessed via "http://localhost:port_number
-"  
+In its current state the host machine has local ports that connect to each of the nodes. Meaning that nodes can be accessed via "http://localhost:port_number". Node count is determined by how many nodes are used 
+
 ## Startup
 Running the command:
 ```
 python3 main.py config.json
 ```
-Starts the program. Depending on how many nodes you have, the program will generate all of the appropriate Dockerfiles and account key files. It's recommended to have at least 2 nodes, with one being dedicated to deploying contracts. In it's current iteration, the "start_mining" function only has all nodes with a port number greater than 8485. This allows the node using port 8485 to deploy smart contracts and have the deployment be recorded into the blockchain.
+Starts the program. Depending on how many nodes you have, the program will generate all of the appropriate Dockerfiles and account key files. It's recommended to have at least 2 nodes, with one being dedicated to deploying contracts. In it's current iteration, the "start_mining" function only has all nodes with a port number greater than 8486. This allows the node using port 8485 to deploy smart contracts and 8546 to interact with that smart contract
 
-
-![3_nodes](https://github.com/htobin/geth-dev-main/blob/master/images/Network_overview_3_nodes.jpg)
+### Below is a picture of what the network looks like with 3 nodes
+![3_nodes](/images/Network_overview_3_nodes.jpg)
 
 
 ## Mining
@@ -343,28 +336,13 @@ python3 nodes.py config.json transaction
 
 Then follow the prompts: one asks for the port to connect to the other asks for the transaction number.
 
-# Deploying smart contract
-To deploy a smart contract, you must use the node that corresponds with to localhost port 8545.
-
-## Adding a network to Brownie:
+# Deploying and interact with a smart contract:
 ```
-brownie networks add Ethereum name_of_network 127.0.0.1:8545
+python3 nodes.py config.json interact
 ```
-
-This adds a network that connects directly to the node on localhost port 8545
-
-## Deploying a contract with Browinie
-Make sure to be in the geth-dev-main directory
-```
-brownie run scripts/token.py --network name_of_network
-```
-
-This will connect to your node at the port 8545 and as long as there is another node that is mining and adding blocks to the blockchain your contract will be deployed. If you look for transactions 
-
-
 # Future plans:
 
 - ### Create a docker container to act as the local host, that way the network is more portable
 - ### have a way to designate specific nodes to mine without having the specified nodes in order
-    - current iteration: nodes.py only has all  nodes with ports greater than 8545 (up to 8546 + number of nodes - 1)
+    - current iteration: nodes.py only has all  nodes with ports greater than 8546 (up to 8547 + number of nodes - 1)
     

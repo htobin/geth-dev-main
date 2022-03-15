@@ -84,7 +84,10 @@ def create_node_lines(keyfile):
         "\n",
         "EXPOSE $discoverPort",
         "\n\n",
-        "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId --port $discoverPort --syncmode full --allow-insecure-unlock --unlock 0 --password ./password.txt --http --http.addr 0.0.0.0 --dev.period 0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" --http.port $rpcPort"
+        "CMD geth --bootnodes \"enode://$bootnodeId@$bootnodeIp:$bootnodePort\" --networkid $networkId "
+        "--port $discoverPort --syncmode full --allow-insecure-unlock --unlock 0 --password ./password.txt --http "
+        "--http.addr 0.0.0.0 --dev.period 0  --http.api \"eth,miner,personal,web3,net,debug\" --http.corsdomain \"*\" "
+        "--http.port $rpcPort"
     ]
     return node_lines
 
@@ -139,7 +142,7 @@ def create_genesis_file(chain_id, keyfile_objs):
         "timestamp": str(timestamp),
         "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "gasLimit": "0x47b760",
-        "difficulty": "0x00001",
+        "difficulty": "0x1000",
         "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "coinbase": "0x0000000000000000000000000000000000000000",
         "alloc": {},

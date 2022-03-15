@@ -9,6 +9,7 @@ def contact_interaction(nodes):
     interaction = nodes['8546']
 
     compiled_sol = solcx.compile_files(['./Greeter.sol'], output_values=['abi', 'bin'])
+
     contract_id, contract_interface = compiled_sol.popitem()
     bytecode = contract_interface['bin']
     abi = contract_interface['abi']
@@ -101,7 +102,7 @@ def start_mining(nodes):
     while i < len(nodes) - 1:
         name = str(8546 + i)
         print(f"{name}: starting to mine")
-        nodes[name].geth.miner.start(2)
+        nodes[name].geth.miner.start(1)
         if nodes[name].eth.mining:
             print(f"{name} is mining")
         else:
@@ -154,7 +155,7 @@ def still_mining(nodes):
 if __name__ == "__main__":
     args = arguments()
     nodes = connect_to_nodes(args)
-    # connection_check(nodes)
+    connection_check(nodes)
     if args.function == "start_mine":
         start_mining(nodes)
     if args.function == "stop_mine":
@@ -167,3 +168,4 @@ if __name__ == "__main__":
         check_transactions(nodes)
     if args.function == "interact":
         contact_interaction(nodes)
+
