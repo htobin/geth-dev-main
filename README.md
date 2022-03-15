@@ -297,15 +297,54 @@ Running the command:
 ```
 python3 main.py config.json
 ```
-Starts the program. Depending on how many nodes you have, the program will generate all of the appropriate Dockerfiles and account key files. It's recommended to have at least 2 nodes, with one being dedicated to deploying contracts. In it's current iteration, the "start_mining" function only has all nodes with a port number greater than 8486. This allows the node using port 8485 to deploy smart contracts and 8546 to interact with that smart contract
+Initializes all node and account information.
+
+Additional files and directories added to main directory:
+- geth-dev-node_num: node directory containing the Dockerfiles for initialization
+- geth-bootnode: contains Dockerfile for bootnode
+- keystore: stores all node information
+- dockercompose.yaml: Docker compose file
+- genesis.json: boot node information for initializing the network via genesis block
+
+Depending on how many nodes you have, the program will generate all of the appropriate Dockerfiles and account key files. It's recommended to have at least 3 nodes, with one being dedicated to deploying contracts. Nodes cannot mine and interact with smart contracts simultaneously In its current iteration, the "start_mining" function only has all nodes with a port number greater than 8486. This allows the node using port 8485 to deploy smart contracts and 8546 to interact with that smart contract
+
+To get the network initialized run: `docker compose up`
+
+The terminal should start up all of the node. If this is the first time running the program it may take a while to get all the nodes running. As mentioned in the [Dockerfile section](#Dockerfile-format) each node needs the Ubuntu software updates in order to run the Ethereum suite of software.
+
+A good inidcator that your nodes are ready for use is if you see a message similar to this. This means all nodes can find each other and they are ready for use.
+```
+geth-dev-node_2   | INFO [03-15|09:56:05.206] Looking for peers    peercount=2 tried=3 static=0
+geth-dev-node_0   | INFO [03-15|09:56:05.364] Looking for peers    peercount=2 tried=2 static=0
+geth-dev-node_1   | INFO [03-15|09:56:05.378] Looking for peers    peercount=2 tried=1 static=0
+```
+
 
 ### Below is a picture of what the network looks like with 3 nodes
 ![3_nodes](/images/Network_overview_3_nodes.jpg)
 
+### In another terminal instance you can interact with the nodes
+A simple sequence of commands in another window:
+- `python3 nodes.py config.json start_mine`
+- wait for epoch 0 to finish initializting
+- `python3 nodes.py config.json interact`
+- After that command you should see
+```
+8545 is connected
+8546 is connected
+8547 is connected
+Greeter 1: Hello, World!
+Greeter 2: Hello, World!
+```
+
+Give the interact command sometime as it there needs to be a block mined with the transaction that deployed the smart contract. It also may take a while for the Greeter lines to come out as well. Note: if you have more than 3 nodes, there may be some bugs. This program has yet to handle multiple miners perfectly.
 
 ## Mining
 Once the network has been set up, it's time to mine nodes
 
+Note about mining: Nodes do not go straight to mining until they create a DAG. This DAG is to create a transactional representation of the network. Once the DAG is created for Epoch 0, the nodes will begin to mine while also creating a DAG for Epoch 1. Although Epoch 1 is supposed to start at 30,000 blocks. This private network initialized the Epoch 1 DAG right after Epoch 0's DAG is initialized.
+
+Node about mining: current difficulty for mining is set to 1000, to change this number see the [Config.json section](#Configuration-file:-config.json) for more information.
 ```
 python3 nodes.py config.json start_mining
 ```
@@ -340,6 +379,8 @@ Then follow the prompts: one asks for the port to connect to the other asks for 
 ```
 python3 nodes.py config.json interact
 ```
+
+This command has node 8545 deploy a smart contract then 8546 is able to reach that contract and interact with it.
 # Future plans:
 
 - ### Create a docker container to act as the local host, that way the network is more portable
