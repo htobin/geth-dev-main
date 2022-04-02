@@ -329,7 +329,7 @@ A simple sequence of commands in another window:
 - check back in previous terminal, where docker containers were initialized
 - wait for epoch 0 to finish initializing, as the picture 
 
-![epoch_0](/images/epoch0.png)
+![epoch_0](/images/epoch_0.png)
 - go back to terminal window where mining command was entered
 - `python3 nodes.py config.json interact`
 - After that command you should see
