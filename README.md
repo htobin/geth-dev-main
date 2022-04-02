@@ -327,9 +327,10 @@ geth-dev-node_1   | INFO [03-15|09:56:05.378] Looking for peers    peercount=2 t
 A simple sequence of commands in another window:
 - `python3 nodes.py config.json start_mine`
 - check back in previous terminal, where docker containers were initialized
-- wait for epoch 0 to finish initializing, as the picture 
+- wait for epoch 0 to finish initializing, which is seen in the picture below
 
 ![epoch_0](/images/epoch_0.png)
+
 - go back to terminal window where mining command was entered
 - `python3 nodes.py config.json interact`
 - After that command you should see
