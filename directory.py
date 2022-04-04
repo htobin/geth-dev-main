@@ -119,10 +119,10 @@ def create_node_directory(node_obj,keyfile_obj):
 
 def create_genesis_file(chain_id, keyfile_objs):
     #get the time as an epoch
-    epoch = subprocess.check_output(['date', '+%s'])
+    #epoch = subprocess.check_output(['date', '+%s'])
     #turn epoch into hex format
-    timestamp = hex(int(epoch))
-    null = None
+    #timestamp = hex(int(epoch))
+    #null = None
 
     genesis = {
         "config": {
@@ -139,7 +139,7 @@ def create_genesis_file(chain_id, keyfile_objs):
             "ethash": {}
         },
         "nonce": "0x0",
-        "timestamp": str(timestamp),
+        "timestamp": "0x00",
         "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "gasLimit": "0x47b760",
         "difficulty": "0x1000",
@@ -148,8 +148,7 @@ def create_genesis_file(chain_id, keyfile_objs):
         "alloc": {},
         "number": "0x0",
         "gasUsed": "0x0",
-        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "baseFeePerGas": null
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
     }
     #get the address of the key files to make sure all accounts have ether to burn
     for file in keyfile_objs.keys():
