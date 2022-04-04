@@ -141,14 +141,11 @@ def create_genesis_file(chain_id, keyfile_objs):
         "nonce": "0x0",
         "timestamp": "0x00",
         "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "gasLimit": "0x47b760",
+        "gasLimit": "8000000",
         "difficulty": "0x1000",
-        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-        "coinbase": "0x0000000000000000000000000000000000000000",
         "alloc": {},
         "number": "0x0",
-        "gasUsed": "0x0",
-        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        "gasUsed": "0x0"
     }
     #get the address of the key files to make sure all accounts have ether to burn
     for file in keyfile_objs.keys():
