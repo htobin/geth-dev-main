@@ -102,7 +102,7 @@ def start_mining(nodes):
     while i < len(nodes) - 1:
         name = str(8546 + i)
         print(f"{name}: starting to mine")
-        nodes[name].miner.start(1)
+        nodes[name].geth.miner.start(1)
         if nodes[name].eth.mining:
             print(f"{name} is mining")
         else:
