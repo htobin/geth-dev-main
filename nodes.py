@@ -4,6 +4,17 @@ from web3 import Web3
 import solcx
 
 
+def print_trans_info(tx):
+    block_hash = tx['blockHash'].hex()
+    block_number = tx['blockNumber']
+    from_addr = tx['from']
+    contract_addr = tx['to']
+    transaction_hash = tx['transactionHash'].hex()
+    print(f'\nblock info: number {block_number} hash: {block_hash}')
+    print(f'\nfrom: {from_addr} to contract {contract_addr}')
+    print(f'\ntransaction hash: {transaction_hash}')
+
+
 def contact_interaction(nodes):
     w3 = nodes['8545']
     interaction = nodes['8546']
@@ -17,7 +28,7 @@ def contact_interaction(nodes):
     # set pre-funded account as sender
     w3.eth.default_account = w3.eth.accounts[0]
 
-    #create contract instance
+    # create contract instance
     Greeter = w3.eth.contract(abi=abi, bytecode=bytecode)
 
     # Submit the transaction that deploys the contract
@@ -26,15 +37,24 @@ def contact_interaction(nodes):
     # Wait for the transaction to be mined, and get the transaction receipt
     tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
+    # create contract instance
     greeter = w3.eth.contract(address=tx_receipt.contractAddress, abi=abi)
-
-    print(f"Greeter 1: {greeter.functions.greet().call()}")
+    print(f'contract found at {tx_receipt.contractAddress}')
+    # call and wait for greeter
+    first_call_hash = greeter.functions.greet().transact()
+    first_call_receipt = w3.eth.wait_for_transaction_receipt(first_call_hash)
+    print(f"Greeter 1: {w3.eth.default_account}\nContract output: {greeter.functions.greet().call()}")
+    print_trans_info(first_call_receipt)
 
     interaction.eth.default_account = interaction.eth.accounts[0]
 
+    # call and wait for greeter 2
     greeter2 = interaction.eth.contract(address=tx_receipt.contractAddress, abi=abi)
+    second_call_hash = greeter2.functions.greet().transact()
+    second_call_receipt = w3.eth.wait_for_transaction_receipt(second_call_hash)
 
-    print(f"Greeter 2: {greeter2.functions.greet().call()}")
+    print(f"Greeter 2: {interaction.eth.default_account}\nContract output: {greeter2.functions.greet().call()}")
+    print_trans_info(second_call_receipt)
 
 
 def arguments():
@@ -168,4 +188,3 @@ if __name__ == "__main__":
         check_transactions(nodes)
     if args.function == "interact":
         contact_interaction(nodes)
-

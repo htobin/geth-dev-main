@@ -6,7 +6,7 @@ import json
 
 #Boot node Dockerfile lines
 bootnode_lines = [
-    "FROM ubuntu:latest",
+    "FROM ubuntu:focal",
     "\n\n",
     "RUN apt-get update \\",
     "\n",
@@ -42,7 +42,7 @@ bootnode_lines = [
 def create_node_lines(keyfile):
     keyfile_copy = "COPY ./keystore/" + keyfile + " ./.ethereum/keystore/" + keyfile
     node_lines = [
-        "FROM ubuntu:latest",
+        "FROM ubuntu:focal",
         "\n\n",
         "RUN apt-get update \\",
         "\n",
