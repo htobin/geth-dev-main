@@ -12,7 +12,7 @@ To create a simulated network of Ethereum nodes that can store Ether, mine Ether
     - ### [Docker Compose v2](https://docs.docker.com/compose/cli-command/)
     - ### [Post Install Instructions](https://docs.docker.com/engine/install/linux-postinstall/)
 - ### [Geth](https://geth.ethereum.org/docs/install-and-build/installing-geth): Version: 1.10.14-stable
-- ### [Brownie](https://eth-brownie.readthedocs.io/en/stable/): Brownie v1.17.0
+- ### [Solcx](https://eth-brownie.readthedocs.io/en/stable/](https://pypi.org/project/py-solc-x/)): solcx: latest
 
 
 
